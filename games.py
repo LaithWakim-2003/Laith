@@ -1,5 +1,16 @@
+from bfs import BFS
+from dfs import DFS
 from board import Board
 
+class Type:
+    def __init__(self,board):
+        c = str(input("Please choose BFS or DFS: "))
+        if c == 'BFS':
+            BFS().setterboard(board)
+        elif c == 'DFS':
+            DFS().setterboard(board)         
+        else:
+            board.choice(board)
 class Level1:
 
     def __init__(self):
@@ -9,9 +20,8 @@ class Level1:
         self.board.place_white_circle(1,1,True)
         self.board.place_white_circle(1,3,True)
 
-        self.board.print_board()
-        self.board.choice()
-
+        Type(self.board)
+        
 class Level2:
 
     def __init__(self):
@@ -27,8 +37,8 @@ class Level2:
         self.board.place_white_circle(4, 2,True)
         self.board.place_magnet_neg(4, 0,False)
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
+
 
 class Level3:
 
@@ -42,8 +52,7 @@ class Level3:
         self.board.place_white_circle(2, 3,True)
         self.board.place_magnet_neg(2, 0,False)
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level4:
 
@@ -58,8 +67,7 @@ class Level4:
         self.board.place_white_circle(4, 1,True)
         self.board.place_magnet_neg(2, 0,False)
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level5:
     def __init__(self):
@@ -76,8 +84,7 @@ class Level5:
         self.board.place_white_circle(3, 0,True)
         self.board.place_magnet_neg(3, 1,False)
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level6:
 
@@ -90,8 +97,7 @@ class Level6:
         self.board.place_white_circle(0,3,True)
         self.board.place_white_circle(2,3,True)
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level7:
 
@@ -109,8 +115,7 @@ class Level7:
         self.board.place_empty_cell(4,1,False)
         self.board.place_empty_cell(4,2,False)
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level8:
 
@@ -124,8 +129,9 @@ class Level8:
         self.board.place_white_circle(0,2,True)
         self.board.place_white_circle(2,2,True)
 
-        self.board.print_board()
-        self.board.choice()        
+        Type(self.board)
+
+                
 
 class Level9:
 
@@ -139,8 +145,8 @@ class Level9:
         self.board.place_white_circle(0,6,True)
         
 
-        self.board.print_board()
-        self.board.choice()        
+        Type(self.board)
+
 
 class Level10:
 
@@ -158,8 +164,9 @@ class Level10:
         self.board.place_white_circle(3,3,True)
         
 
-        self.board.print_board()
-        self.board.choice()                
+        Type(self.board)
+
+                        
 
 class Level11:
 
@@ -178,8 +185,10 @@ class Level11:
         self.board.place_empty_cell(1,3,False)
         self.board.place_empty_cell(1,4,False)
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
+
+        
+        
 
 class Level12:
 
@@ -198,8 +207,7 @@ class Level12:
         self.board.place_empty_cell(1,2,False)
         self.board.place_empty_cell(1,3,False)
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level13:
     
@@ -220,8 +228,7 @@ class Level13:
         self.board.place_empty_cell(2,5,False)
 
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level14:
     
@@ -238,8 +245,7 @@ class Level14:
 
 
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level15:
     
@@ -254,8 +260,7 @@ class Level15:
         self.board.place_magnet_neg(1,2,False)
         self.board.place_magnet_pos(2,2,False)
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level16:
     
@@ -270,8 +275,7 @@ class Level16:
         self.board.place_magnet_neg(2,4,False)
         self.board.place_magnet_pos(2,0,False)
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level17:
     
@@ -285,8 +289,7 @@ class Level17:
         self.board.place_white_circle(3,1,True)
         self.board.place_magnet_neg(3,3,False)
         self.board.place_magnet_pos(0,0,False)
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level18:
     
@@ -315,8 +318,7 @@ class Level18:
         self.board.place_empty_cell(4,4,False)
         self.board.place_empty_cell(4,5,False)
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level19:
     
@@ -345,8 +347,7 @@ class Level19:
         self.board.place_empty_cell(4,4,False)
         
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level20:
     
@@ -366,8 +367,7 @@ class Level20:
         self.board.place_magnet_pos(4,3,False)
         
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level21:
     
@@ -386,8 +386,7 @@ class Level21:
         self.board.place_magnet_pos(2,3,False)
         
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level22:
     
@@ -412,8 +411,7 @@ class Level22:
 
 
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level23:
     
@@ -431,8 +429,7 @@ class Level23:
         self.board.place_magnet_pos(3,2,True)
         self.board.place_magnet_neg(3,4,False)
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level24:
     
@@ -455,8 +452,7 @@ class Level24:
         self.board.place_empty_cell(4,0,False)
         self.board.place_empty_cell(4,4,False)
 
-        self.board.print_board()
-        self.board.choice()
+        Type(self.board)
 
 class Level25:
     
@@ -477,6 +473,6 @@ class Level25:
         self.board.place_magnet_pos(0,3,True)
         self.board.place_magnet_neg(4,0,True)
 
+        Type(self.board)
 
-        self.board.print_board()
-        self.board.choice()
+        

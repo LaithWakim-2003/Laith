@@ -11,7 +11,7 @@ def choose_level():
             level = level_class()
             
         else:
-            print("Invalid level number. Please enter a number between 1 and 24.")
+            print("Invalid level number. Please enter a number between 1 an3d 24.")
     except ValueError:
         print("Please enter a valid number.")
 

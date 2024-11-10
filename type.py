@@ -29,3 +29,9 @@ class Empty(Cell):
         super().__init__(cell_type=' ', white_space = white_space)
         self.position_x = position_x
         self.position_y = position_y
+
+class Normal_Cell(Cell):
+    def __init__(self, position_x, position_y, white_space = False):
+        super().__init__(cell_type='.', white_space = white_space)
+        self.position_x = position_x
+        self.position_y = position_y

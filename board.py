@@ -1,16 +1,19 @@
+from algo import Algo
+from availablemoves import AvailableMoves
 from cell import Cell
 from colorama import Fore, Back, Style, init
 
-from type import Empty, Iron, Magnet_Neg, Magnet_Pos, White_Circle
+from movement import Movement
+from type import Empty, Iron, Magnet_Neg, Magnet_Pos, Normal_Cell, White_Circle
 init()
 
 class Board:
-    
+    my_grids = []
     def __init__(self, rows = 10 , cols = 10 , attempts = 10):
         self.rows = rows
         self.cols = cols
         self.attempts = attempts
-        self.lm_grid = [[Cell() for _ in range(cols)] for _ in range(rows)]
+        self.lm_grid = [[Normal_Cell(x,y,white_space=False) for x in range(cols)] for y in range(rows)]
     
     def get_magnet_position(self):
        input_x = int(input("Enter x coordinate: "))
@@ -32,7 +35,11 @@ class Board:
     
     def is_invalid_destination(self, x, y): 
        return self.lm_grid[x][y].cell_type in [' ', 'R', 'N', 'I']
-    
+     
+    def place_normal_cell(self,n_cell_x,n_cell_y,white_space):
+        cell = Normal_Cell(n_cell_x,n_cell_y,white_space = white_space)
+        self.lm_grid[n_cell_x][n_cell_y] = cell
+        
     def place_magnet_pos(self, mag_x, mag_y,white_space):
       magnet_pos = Magnet_Pos(mag_x,mag_y,white_space)
       self.lm_grid[mag_x][mag_y] = magnet_pos
@@ -52,8 +59,9 @@ class Board:
     def place_white_circle(self, white_cicle_pos_x, white_cicle_pos_y,white_space = True):
         white_space = White_Circle(white_cicle_pos_x, white_cicle_pos_y,white_space)
         self.lm_grid[white_cicle_pos_x][white_cicle_pos_y] = white_space
-
-    def choice(self):
+        
+    def choice(self,board):
+      self.print_board()
       print(f"Attempts: {self.attempts}")
       while self.attempts > 0:
         input_x, input_y = self.get_magnet_position()
@@ -67,7 +75,7 @@ class Board:
             continue
 
 
-        self.move_magnet(input_x, input_y, new_input_x, new_input_y)
+        self.move_magnet(board,input_x, input_y, new_input_x, new_input_y)
         self.print_board()
         if self.win_condition():
             print("Congrats,You completed this level")
@@ -79,85 +87,27 @@ class Board:
         print("No attempts left. Please restart the game.")
 
 
-    def move_magnet(self, input_x, input_y, new_input_x, new_input_y):
+    def move_magnet(self,board, input_x, input_y, new_input_x, new_input_y):
       self.lm_grid[new_input_x][new_input_y].cell_type = self.lm_grid[input_x][input_y].cell_type
       self.lm_grid[input_x][input_y].cell_type = '.'
-      if self.lm_grid[new_input_x][new_input_y].cell_type == 'R':
-        self.move_cells_to_magnet(new_input_x, new_input_y)
+      if self.lm_grid[input_x][input_y].white_space == True:
+        Movement().place_normal_cell(board,input_x,input_y,True)
       else:
-        self.move_cells_away_from_magnet(new_input_x, new_input_y)
+        Movement().place_normal_cell(board,input_x,input_y,False)  
         
-    def move_iron_away(self, start, end, step_for_x, step_for_y,mag_n_x,mag_n_y):
-     if step_for_x in [-1,1]:
-           y = mag_n_y
-           step = step_for_x
-     elif step_for_y in [-1,1]:
-           step = step_for_y    
-     for x in range(start, end, step):
-        if step_for_y in [-1,1]:
-           y = x
-           x = mag_n_x
-        if not self.is_within_bounds(x,y):
-          continue     
-        if self.lm_grid[x][y].cell_type == '.':
-            pass
-        elif self.lm_grid[x][y].cell_type in ['R', 'I']:
-           if self.is_within_bounds(x + step_for_x, y + step_for_y):
-            if self.lm_grid[x + step_for_x][y + step_for_y].cell_type == '.':
-                self.lm_grid[x + step_for_x][y + step_for_y].cell_type = self.lm_grid[x][y].cell_type
-                self.lm_grid[x][y].cell_type = '.'
-                break
-            elif self.lm_grid[x + step_for_x][y + step_for_y].cell_type in ['R', 'I']:
-              if self.is_within_bounds(x + 2 * step_for_x, y + 2 * step_for_y):
-                temporary = self.lm_grid[x + step_for_x][y + step_for_y].cell_type
-                self.lm_grid[x + 2 * step_for_x][y + 2 * step_for_y].cell_type = self.lm_grid[x + step_for_x][y + step_for_y].cell_type
-                self.lm_grid[x + step_for_x][y + step_for_y].cell_type = '.'
-                self.lm_grid[x + 2 * step_for_x][y + 2 * step_for_y].cell_type = temporary
-                self.lm_grid[x + step_for_x][y + step_for_y].cell_type = self.lm_grid[x][y].cell_type
-                self.lm_grid[x][y].cell_type = '.'
-                break
-             
-    def move_iron_towards(self, start , end , step_for_x, step_for_y,mag_x,mag_y):
-      if step_for_x in [-1,1]:
-           y = mag_y
-           step = step_for_x
-      elif step_for_y in [-1,1]:
-           step = step_for_y    
-      for x in range(start, end, step):
-         if step_for_y in [-1,1]:
-           y = x
-           x = mag_x
-         if self.lm_grid[x][y].cell_type == '.':
-            if self.lm_grid[x + step_for_x][y + step_for_y].cell_type == '.':
-               pass
-            elif self.lm_grid[x + step_for_x][y + step_for_y].cell_type in ['N','I']:
-                temp = self.lm_grid[x][y].cell_type
-                self.lm_grid[x][y].cell_type = self.lm_grid[x + step_for_x][y + step_for_y].cell_type
-                self.lm_grid[x + step_for_x][y + step_for_y].cell_type = temp
+      if self.lm_grid[new_input_x][new_input_y].cell_type == 'R':
+         if self.lm_grid[new_input_x][new_input_y].white_space == True:
+            Movement().place_magnet_pos(board,new_input_x,new_input_y,True)
          else:
-            self.lm_grid[x][y].cell_type in ['N','I']
-            pass
-       
-    def move_cells_to_magnet(self , mag_x , mag_y):
-    # Up => down
-      self.move_iron_towards(mag_x - 1, 0,-1,0,mag_x,mag_y)
-    # Down => up
-      self.move_iron_towards(mag_x + 1,self.rows - 1,1,0,mag_x,mag_y)
-    # Left => right
-      self.move_iron_towards(mag_y - 1,0,0,-1,mag_x,mag_y)
-    # Right => left
-      self.move_iron_towards(mag_y + 1,self.cols - 1,0,1,mag_x,mag_y)
-
-    def move_cells_away_from_magnet(self, mag_n_x, mag_n_y):
-    # Up direction
-     self.move_iron_away(mag_n_x - 1 , -1 , -1 , 0,mag_n_x,mag_n_y)
-    # Down direction
-     self.move_iron_away(mag_n_x + 1 , self.rows - 1 , 1 , 0,mag_n_x,mag_n_y)
-    # Left direction
-     self.move_iron_away(mag_n_y - 1 , -1 , 0 ,-1,mag_n_x,mag_n_y)
-    # Right direction
-     self.move_iron_away(mag_n_y + 1 , self.cols - 1 , 0 , 1 ,mag_n_x, mag_n_y)
-
+            Movement().place_magnet_pos(board,new_input_x,new_input_y,False)
+         Movement().move_cells_to_magnet(board,new_input_x, new_input_y,board.rows,board.cols)
+      else:
+         if self.lm_grid[new_input_x][new_input_y].white_space == True:
+            Movement().place_magnet_neg(board,new_input_x,new_input_y,True)
+         else:
+            Movement().place_magnet_neg(board,new_input_x,new_input_y,False)
+         Movement().move_cells_away_from_magnet(board,new_input_x, new_input_y,board.rows,board.cols)
+      
     def win_condition(self):
        winner = True     
        for row in range(self.rows):
@@ -169,8 +119,8 @@ class Board:
                 winner = False
             else:
               continue      
-       return winner          
-       
+       return winner 
+              
     def print_board(self):
       col_indices = 'X\\Y  ' + '  '.join([str(i) for i in range(self.cols)])
       print(col_indices)
@@ -186,3 +136,17 @@ class Board:
         ])
         print(f" {idx}   {row_str}")
         
+    def print_board_type(self):
+      col_indices = 'X\\Y  ' + '  '.join([str(i) for i in range(self.cols)])
+      print(col_indices)
+
+      for idx, row in enumerate(self.lm_grid):
+        row_str = '  '.join([
+            (Back.GREEN + type(cell).__name__ + Back.RESET) if cell.white_space 
+            else (Fore.RED + type(cell).__name__ + Fore.RESET) if cell.cell_type == 'R' 
+            else (Fore.BLUE + type(cell).__name__ + Fore.RESET) if cell.cell_type == 'N' 
+            else (Fore.YELLOW + type(cell).__name__ + Fore.RESET) if cell.cell_type == 'I' 
+            else (Fore.BLACK + type(cell).__name__ + Fore.RESET) if cell.cell_type == ' ' 
+            else type(cell).__name__ for cell in row
+        ])
+        print(f" {idx}   {row_str}")
