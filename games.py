@@ -1,14 +1,17 @@
 from bfs import BFS
 from dfs import DFS
 from board import Board
+from ucs import UCS
 
 class Type:
     def __init__(self,board):
-        c = str(input("Please choose BFS or DFS: "))
+        c = str(input("Please choose BFS,DFS or UCS: "))
         if c == 'BFS':
             BFS().setterboard(board)
         elif c == 'DFS':
-            DFS().setterboard(board)         
+            DFS().setterboard(board)
+        elif c == 'UCS':
+            UCS().setterboard(board)           
         else:
             board.choice(board)
 class Level1:
